@@ -4,7 +4,7 @@
   "author": "Don Gaudino",
   "license": "Unlicense",
   "dependencies": {
-    "@panosoft/elm-native-helpers": "^0.1.6",
-    "nodemailer": "^3.1.7"
+    "@panosoft/elm-native-helpers": "^0.1.10",
+    "nodemailer": "^3.1.8"
   }
 }
