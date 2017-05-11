@@ -149,8 +149,3 @@ SendComplete (Err error) ->
     in
         model ! []
 ```
-
-
-## Warning
-
-This library is still in alpha.
