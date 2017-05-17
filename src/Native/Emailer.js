@@ -36,6 +36,9 @@ var _panosoft$elm_emailer$Native_Emailer;
 			if (auth) {
 				transporterOptions.auth = {user: auth.user, pass: auth.pass};
 			}
+			if (debug) {
+				transporterOptions.logger = require('bunyan').createLogger({name: 'Emailer'});
+			}
 			return nodemailer.createTransport(transporterOptions);
 		};
 		const _mailOptions = (options) => {

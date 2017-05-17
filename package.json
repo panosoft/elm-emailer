@@ -5,6 +5,7 @@
   "license": "Unlicense",
   "dependencies": {
     "@panosoft/elm-native-helpers": "^0.1.10",
+    "bunyan": "^1.8.10",
     "nodemailer": "^3.1.8"
   }
 }
