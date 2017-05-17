@@ -1,17 +1,22 @@
 effect module Emailer
     where { command = MyCmd }
     exposing
-        ( send
-        , EmailConfig
-        , EmailOptions
+        ( Config
+        , MessageOptions
         , Auth
-        , EmailMessage(..)
+        , Message(..)
         , ErrorMessage
         , ResponseMessage
         , SendResult
         , SendCompleteTagger
-        , mtEmailConfig
+        , send
+        , mtEmailerConfig
         )
+
+{-| Email Effects Module
+
+@docs Config , MessageOptions , Auth , Message , ErrorMessage , ResponseMessage , SendResult , SendCompleteTagger , send , mtEmailerConfig
+-}
 
 import Task exposing (Task)
 import Native.Emailer
@@ -21,16 +26,20 @@ import Native.Emailer
 
 
 type MyCmd msg
-    = Send EmailConfig EmailOptions (SendCompleteTagger msg)
+    = Send Config MessageOptions (SendCompleteTagger msg)
 
 
+{-| Auth
+-}
 type alias Auth =
     { user : String
     , pass : String
     }
 
 
-type alias EmailConfig =
+{-| Module's configuration
+-}
+type alias Config =
     { host : String
     , port_ : Maybe Int
     , auth : Maybe Auth
@@ -39,8 +48,10 @@ type alias EmailConfig =
     }
 
 
-mtEmailConfig : EmailConfig
-mtEmailConfig =
+{-| Empty config for mutating
+-}
+mtEmailerConfig : Config
+mtEmailerConfig =
     { host = ""
     , port_ = Nothing
     , auth = Nothing
@@ -49,16 +60,20 @@ mtEmailConfig =
     }
 
 
-type EmailMessage
+{-| Message types
+-}
+type Message
     = TextMessage String
     | HtmlMessage String
 
 
-type alias EmailOptions =
+{-| Message options
+-}
+type alias MessageOptions =
     { from : String
     , to : String
     , subject : String
-    , message : EmailMessage
+    , message : Message
     }
 
 
@@ -103,8 +118,8 @@ type alias State =
 cmdMap : (a -> b) -> MyCmd a -> MyCmd b
 cmdMap f cmd =
     case cmd of
-        Send config mailOptions tagger ->
-            Send config mailOptions (f << tagger)
+        Send config mailMessageOptions tagger ->
+            Send config mailMessageOptions (f << tagger)
 
 
 {-| Send
@@ -121,9 +136,9 @@ cmdMap f cmd =
 -- send Cmd
 
 
-send : EmailConfig -> EmailOptions -> SendCompleteTagger msg -> Cmd msg
-send config mailOptions tagger =
-    command (Send config mailOptions tagger)
+send : Config -> MessageOptions -> SendCompleteTagger msg -> Cmd msg
+send config mailMessageOptions tagger =
+    command (Send config mailMessageOptions tagger)
 
 
 
@@ -198,14 +213,14 @@ settings2 router errorTagger tagger =
 handleCmd : Platform.Router msg (Msg msg) -> State -> MyCmd msg -> ( Task Never (), State )
 handleCmd router state cmd =
     case cmd of
-        Send config mailOptions tagger ->
+        Send config mailMessageOptions tagger ->
             ( Native.Emailer.send (settings1 router (ErrorSend tagger) (SuccessSend tagger))
                 config.host
                 config.port_
                 config.auth
                 config.secure
                 config.debug
-                mailOptions
+                mailMessageOptions
             , state
             )
 

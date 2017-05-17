@@ -12,9 +12,9 @@ port exitApp : Float -> Cmd msg
 port externalStop : (() -> msg) -> Sub msg
 
 
-config : EmailConfig
+config : Emailer.Config
 config =
-    { mtEmailConfig
+    { mtEmailerConfig
         | host = "localhost"
         , port_ = Just 465
         , auth = Just <| Auth "user" "password"
@@ -22,7 +22,7 @@ config =
     }
 
 
-options : EmailOptions
+options : MessageOptions
 options =
     { from = "noreply@example.com"
     , to = "joe@example.com"
@@ -31,7 +31,7 @@ options =
     }
 
 
-sendEmail : EmailOptions -> SendCompleteTagger Msg -> Cmd Msg
+sendEmail : MessageOptions -> SendCompleteTagger Msg -> Cmd Msg
 sendEmail =
     Emailer.send config
 
