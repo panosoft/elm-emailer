@@ -1,5 +1,6 @@
 {
-  "version": "1.0.0",
+  "name": "@panosoft/elm-emailer",
+  "version": "2.0.1",
   "description": "",
   "author": "Don Gaudino",
   "license": "Unlicense",
